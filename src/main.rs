@@ -1,3 +1,4 @@
+use std::collections::{HashMap};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -117,10 +118,82 @@ fn day_2_part_2() {
     );
 }
 
+#[derive(Debug, Clone)]
+struct BitTracker {
+    pub bits_of_bits: Vec<HashMap<char, u32>>,
+}
+
+impl BitTracker {
+    pub fn new(bit_count: usize) -> Self {
+        Self {
+            bits_of_bits: vec![HashMap::new(); bit_count]
+        }
+    }
+}
+
+impl BitTracker {
+    fn increment(&mut self, bit: &char, position: usize) {
+        if !self.bits_of_bits[position].contains_key(bit) {
+            self.bits_of_bits[position].insert(*bit, 0);
+        }
+        *self.bits_of_bits[position].get_mut(bit).unwrap() += 1;
+    }
+
+    fn gamma_binary(&self) -> String {
+        self.bits_of_bits.iter().map(|k| {
+            let mut chosen_bit: Option<char> = None;
+            let mut highest_count: u32 = 0;
+            for (bit, count) in k {
+                if count > &highest_count {
+                    chosen_bit = Some(*bit);
+                    highest_count = *count;
+                }
+            }
+            chosen_bit.unwrap()
+        }).collect::<String>()
+    }
+
+    fn epsilon_binary(&self) -> String {
+        self.bits_of_bits.iter().map(|k| {
+            let mut chosen_bit: Option<char> = None;
+            let mut lowest_count: u32 = u32::MAX;
+            for (bit, count) in k {
+                if count < &lowest_count {
+                    chosen_bit = Some(*bit);
+                    lowest_count = *count;
+                }
+            }
+            chosen_bit.unwrap()
+        }).collect::<String>()
+    }
+}
+
+fn day_3_part_1() {
+    let mut bit_counter = BitTracker::new(12);
+    for bits_x12 in get_lines(r"D:\adventofcode\input_day_3.txt") {
+        for (position, bit) in bits_x12.chars().into_iter().enumerate() {
+            bit_counter.increment(&bit, position);
+        }
+    }
+
+    let gamma = bit_counter.gamma_binary();
+    let gamma_int = usize::from_str_radix(&gamma, 2).unwrap();
+    println!("{}: {}", gamma, gamma_int);
+
+    let epsilon = bit_counter.epsilon_binary();
+    let epsilon_int = usize::from_str_radix(&epsilon, 2).unwrap();
+    println!("{}: {}", epsilon, epsilon_int);
+
+    let gamma_x_epsilon = gamma_int * epsilon_int;
+    println!("{}", gamma_x_epsilon);
+}
+
 fn main() {
     //day_1_part_1();
     //day_1_part_2();
 
     //day_2_part_1();
     //day_2_part_2();
+
+    //day_3_part_1();
 }
