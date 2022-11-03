@@ -118,12 +118,13 @@ fn day_2_part_2() {
     );
 }
 
-#[derive(Debug, Clone)]
+#[allow(dead_code)]
 struct BitTracker {
     pub bits_of_bits: Vec<HashMap<char, u32>>,
 }
 
 impl BitTracker {
+    #[allow(dead_code)]
     pub fn new(bit_count: usize) -> Self {
         Self {
             bits_of_bits: vec![HashMap::new(); bit_count]
@@ -132,6 +133,7 @@ impl BitTracker {
 }
 
 impl BitTracker {
+    #[allow(dead_code)]
     fn increment(&mut self, bit: &char, position: usize) {
         if !self.bits_of_bits[position].contains_key(bit) {
             self.bits_of_bits[position].insert(*bit, 0);
@@ -139,6 +141,7 @@ impl BitTracker {
         *self.bits_of_bits[position].get_mut(bit).unwrap() += 1;
     }
 
+    #[allow(dead_code)]
     fn gamma_binary(&self) -> String {
         self.bits_of_bits.iter().map(|k| {
             let mut chosen_bit: Option<char> = None;
@@ -153,6 +156,7 @@ impl BitTracker {
         }).collect::<String>()
     }
 
+    #[allow(dead_code)]
     fn epsilon_binary(&self) -> String {
         self.bits_of_bits.iter().map(|k| {
             let mut chosen_bit: Option<char> = None;
@@ -168,6 +172,7 @@ impl BitTracker {
     }
 }
 
+#[allow(dead_code)]
 fn day_3_part_1() {
     let mut bit_counter = BitTracker::new(12);
     for bits_x12 in get_lines(r"D:\adventofcode\input_day_3.txt") {
@@ -176,13 +181,34 @@ fn day_3_part_1() {
         }
     }
 
-    let gamma = bit_counter.gamma_binary();
-    let gamma_int = usize::from_str_radix(&gamma, 2).unwrap();
-    println!("{}: {}", gamma, gamma_int);
+    let gamma_bits = bit_counter.gamma_binary();
+    let gamma_int = usize::from_str_radix(&gamma_bits, 2).unwrap();
+    println!("{}: {}", gamma_bits, gamma_int);
 
-    let epsilon = bit_counter.epsilon_binary();
-    let epsilon_int = usize::from_str_radix(&epsilon, 2).unwrap();
-    println!("{}: {}", epsilon, epsilon_int);
+    let epsilon_bits = bit_counter.epsilon_binary();
+    let epsilon_int = usize::from_str_radix(&epsilon_bits, 2).unwrap();
+    println!("{}: {}", epsilon_bits, epsilon_int);
+
+    let gamma_x_epsilon = gamma_int * epsilon_int;
+    println!("{}", gamma_x_epsilon);
+}
+
+#[allow(dead_code)]
+fn day_3_part_2() {
+    let mut bit_counter = BitTracker::new(12);
+    for bits_x12 in get_lines(r"D:\adventofcode\input_day_3.txt") {
+        for (position, bit) in bits_x12.chars().into_iter().enumerate() {
+            bit_counter.increment(&bit, position);
+        }
+    }
+
+    let gamma_bits = bit_counter.gamma_binary();
+    let gamma_int = usize::from_str_radix(&gamma_bits, 2).unwrap();
+    println!("{}: {}", gamma_bits, gamma_int);
+
+    let epsilon_bits = bit_counter.epsilon_binary();
+    let epsilon_int = usize::from_str_radix(&epsilon_bits, 2).unwrap();
+    println!("{}: {}", epsilon_bits, epsilon_int);
 
     let gamma_x_epsilon = gamma_int * epsilon_int;
     println!("{}", gamma_x_epsilon);
@@ -196,4 +222,5 @@ fn main() {
     //day_2_part_2();
 
     //day_3_part_1();
+    day_3_part_2();
 }
