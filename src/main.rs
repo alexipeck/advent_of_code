@@ -1,10 +1,12 @@
 use std::collections::{HashMap};
+use std::env;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::path::Path;
 
 use iterslide::SlideIterator;
 
-fn get_lines(path: &str) -> Vec<String> {
+fn get_lines(path: &Path) -> Vec<String> {
     match File::open(path) {
         Ok(file) => {
             BufReader::new(file)
@@ -20,10 +22,10 @@ fn get_lines(path: &str) -> Vec<String> {
 }
 
 #[allow(dead_code)]
-fn day_1_part_1() {
+fn day_1_part_1(input_path: &Path) {
     let mut count = 0;
     let mut last: Option<usize> = None;
-    for line in get_lines(r"D:\adventofcode\input_day_1.txt").iter().map(|line| line.parse::<usize>().unwrap()) {
+    for line in get_lines(input_path).iter().map(|line| line.parse::<usize>().unwrap()) {
         if let Some(last) = last {
             if line > last {
                 count += 1;
@@ -35,10 +37,10 @@ fn day_1_part_1() {
 }
 
 #[allow(dead_code)]
-fn day_1_part_2() {
+fn day_1_part_2(input_path: &Path) {
     let mut count = 0;
     let mut last: Option<usize> = None;
-    for grouped_values in get_lines(r"D:\adventofcode\input_day_1.txt").iter().map(|line| line.parse::<usize>().unwrap()).collect::<Vec<usize>>().slide(3) {
+    for grouped_values in get_lines(input_path).iter().map(|line| line.parse::<usize>().unwrap()).collect::<Vec<usize>>().slide(3) {
         let grouped_values_sum: usize = grouped_values.iter().sum();
         if let Some(last) = last {
             if grouped_values_sum > last {
@@ -51,10 +53,10 @@ fn day_1_part_2() {
 }
 
 #[allow(dead_code)]
-fn day_2_part_1() {
+fn day_2_part_1(input_path: &Path) {
     let mut horizontal_position = 0;
     let mut depth = 0;
-    for line in get_lines(r"D:\adventofcode\input_day_2.txt") {
+    for line in get_lines(input_path) {
         let (direction, amount) = {
             let mut t = line.split(' ');
             (
@@ -86,11 +88,11 @@ fn day_2_part_1() {
 }
 
 #[allow(dead_code)]
-fn day_2_part_2() {
+fn day_2_part_2(input_path: &Path) {
     let mut horizontal_position = 0;
     let mut depth = 0;
     let mut aim = 0;
-    for line in get_lines(r"D:\adventofcode\input_day_2.txt") {
+    for line in get_lines(input_path) {
         let (direction, amount) = {
             let mut t = line.split(' ');
             (
@@ -173,9 +175,9 @@ impl BitTracker {
 }
 
 #[allow(dead_code)]
-fn day_3_part_1() {
+fn day_3_part_1(input_path: &Path) {
     let mut bit_counter = BitTracker::new(12);
-    for bits_x12 in get_lines(r"D:\adventofcode\input_day_3.txt") {
+    for bits_x12 in get_lines(input_path) {
         for (position, bit) in bits_x12.chars().into_iter().enumerate() {
             bit_counter.increment(&bit, position);
         }
@@ -194,33 +196,23 @@ fn day_3_part_1() {
 }
 
 #[allow(dead_code)]
-fn day_3_part_2() {
-    let mut bit_counter = BitTracker::new(12);
-    for bits_x12 in get_lines(r"D:\adventofcode\input_day_3.txt") {
+fn day_3_part_2(input_path: &Path) {
+    for bits_x12 in get_lines(input_path) {
         for (position, bit) in bits_x12.chars().into_iter().enumerate() {
-            bit_counter.increment(&bit, position);
+            println!("{}: {}", position, bit);
         }
     }
-
-    let gamma_bits = bit_counter.gamma_binary();
-    let gamma_int = usize::from_str_radix(&gamma_bits, 2).unwrap();
-    println!("{}: {}", gamma_bits, gamma_int);
-
-    let epsilon_bits = bit_counter.epsilon_binary();
-    let epsilon_int = usize::from_str_radix(&epsilon_bits, 2).unwrap();
-    println!("{}: {}", epsilon_bits, epsilon_int);
-
-    let gamma_x_epsilon = gamma_int * epsilon_int;
-    println!("{}", gamma_x_epsilon);
 }
 
 fn main() {
-    //day_1_part_1();
-    //day_1_part_2();
+    let current_directory = env::current_dir().unwrap();
+    println!("{}", current_directory.display());
+    //day_1_part_1(&current_directory.join("input_day_1.txt"));
+    //day_1_part_2(&current_directory.join("input_day_1.txt"));
 
-    //day_2_part_1();
-    //day_2_part_2();
-
-    //day_3_part_1();
-    day_3_part_2();
+    //day_2_part_1(&current_directory.join("input_day_2.txt"));
+    //day_2_part_2(&current_directory.join("input_day_2.txt"));
+    
+    //day_3_part_1(&current_directory.join("input_day_3.txt"));
+    day_3_part_2(&current_directory.join("input_day_3.txt"));
 }
