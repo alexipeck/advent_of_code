@@ -5,3 +5,12 @@ version = 3
 [[package]]
 name = "adventofcode"
 version = "0.1.0"
+dependencies = [
+ "iterslide",
+]
+
+[[package]]
+name = "iterslide"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb811b7daf2582ecb3e0d7e231029722a0d02267dc59bca31d6d464f687662e1"
