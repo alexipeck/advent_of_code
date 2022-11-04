@@ -154,6 +154,7 @@ fn day_3_part_2(input_path: &Path) {
             *bits_of_bits[position].get_mut(&bit).unwrap() += 1;
         }
     }
+
     let mut most_common_bits = [None; 12];
     for (i, t) in bits_of_bits.iter().enumerate() {
         let mut chosen_bit: char = '1';
@@ -163,8 +164,18 @@ fn day_3_part_2(input_path: &Path) {
         most_common_bits[i] = Some(chosen_bit);
     }
     let most_common_bits = most_common_bits.iter().map(|t| t.unwrap()).collect::<String>();
-    let least_common_bits = most_common_bits.chars().into_iter().map(|bit| if bit == '0' {'1'} else {'0'}).collect::<String>();
     println!("{}", most_common_bits);
+
+    let mut least_common_bits = [None; 12];
+    for (i, t) in bits_of_bits.iter().enumerate() {
+        let mut chosen_bit: char = '0';
+        if t.get(&'1').unwrap() < t.get(&'0').unwrap() {
+            chosen_bit = '1';
+        }
+        least_common_bits[i] = Some(chosen_bit);
+    }
+    let least_common_bits = least_common_bits.iter().map(|t| t.unwrap()).collect::<String>();
+    println!("{}", least_common_bits);
 }
 
 fn main() {
@@ -174,7 +185,7 @@ fn main() {
 
     //day_2_part_1(&current_directory.join("input_day_2.txt"));
     //day_2_part_2(&current_directory.join("input_day_2.txt"));
-    
+
     //day_3_part_1(&current_directory.join("input_day_3.txt"));
     day_3_part_2(&current_directory.join("input_day_3.txt"));
 }
